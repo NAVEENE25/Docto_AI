@@ -1,0 +1,59 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOCTO AI</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="style.css">
+    <style>
+      <h1> INTRODUCING DOCTO AI <h1>
+      body {
+          margin: 0;
+          padding: 0;
+          overflow: hidden; /* Prevent scrollbars from appearing */
+      }
+      .background-video {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover; /* Cover the entire screen */
+          z-index: -1; /* Make sure it's behind other content */
+      } 
+    </style>
+  </head>
+  <body>
+    <video autoplay muted loop class="background-video">
+        <source src="images/robo.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    
+    <header class="header">
+      <h1 class="title">DOCTO AI</h1>
+      <p class="subtitle">THE MEDICAL SUGGESTION </p>
+    
+    </header>
+
+    <div class="chat-list"></div>
+
+    <div class="typing-area">
+      <form action="#" class="typing-form">
+        <div class="input-wrapper">
+          <input type="text" placeholder="Enter a prompt here" class="typing-input" required />
+          <button id="send-message-button" class="icon material-symbols-rounded">send</button>
+        </div>
+        <div class="action-buttons">
+          <span id="theme-toggle-button" class="icon material-symbols-rounded">light_mode</span>
+          <span id="delete-chat-button" class="icon material-symbols-rounded">delete</span>
+        </div>
+      </form>
+      <p class="disclaimer-text">
+        ITS AN SUGGESTION ON PANDEMIC TIME TO GUIDE THE PEOPLE ON RIGHT WAY
+      </p>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+  </html>

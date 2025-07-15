@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicine Availability Updater</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('images/6.jpg'); /* Replace 'your-image.jpg' with your image path */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #333;
+        }
+        .header {
+            background-color: rgba(10, 223, 209, 0.8);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 5px;
+            margin: 10px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.4); /* Transparent white background */
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            background: white; /* Opaque input background */
+        }
+        .btn {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .success-message {
+            color: green;
+            font-weight: bold;
+            margin-top: 20px;
+            display: none;
+        }
+        .medicine-section {
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.6); /* Semi-transparent for each medicine section */
+            position: relative;
+        }
+        .remove-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #dc3545;
+            padding: 5px 10px;
+            font-size: 14px;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .remove-btn:hover {
+            background-color: #a71d2a;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        Medicine Availability Updater
+    </div>
+    <div class="container">
+        <form id="medicineForm">
+            <div class="form-group">
+                <label for="pharmacyName">Pharmacy Name:</label>
+                <input type="text" id="pharmacyName" name="pharmacyName" placeholder="Enter pharmacy name" required>
+            </div>
+            <div class="form-group">
+                <label for="location">Pharmacy Location:</label>
+                <textarea id="location" name="location" placeholder="Enter pharmacy address or location" rows="3" required></textarea>
+            </div>
+            <div id="medicineContainer">
+                <div class="medicine-section">
+                    <button type="button" class="remove-btn" onclick="removeMedicine(this)">Remove</button>
+                    <div class="form-group">
+                        <label for="medicineName">Medicine Name:</label>
+                        <input type="text" name="medicineName[]" placeholder="Enter medicine name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity">Quantity Available:</label>
+                        <input type="number" name="quantity[]" placeholder="Enter quantity available" required>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn" id="addMedicineBtn">Add More Medicine</button>
+            <button type="submit" class="btn">Update Medicines</button>
+            <div class="success-message" id="successMessage">
+                Medicines updated successfully!
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const medicineContainer = document.getElementById('medicineContainer');
+        const addMedicineBtn = document.getElementById('addMedicineBtn');
+        const form = document.getElementById('medicineForm');
+        const successMessage = document.getElementById('successMessage');
+
+        // Add a new medicine section
+        addMedicineBtn.addEventListener('click', () => {
+            const newMedicineSection = document.createElement('div');
+            newMedicineSection.classList.add('medicine-section');
+            newMedicineSection.innerHTML = `
+                <button type="button" class="remove-btn" onclick="removeMedicine(this)">Remove</button>
+                <div class="form-group">
+                    <label for="medicineName">Medicine Name:</label>
+                    <input type="text" name="medicineName[]" placeholder="Enter medicine name" required>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity Available:</label>
+                    <input type="number" name="quantity[]" placeholder="Enter quantity available" required>
+                </div>
+            `;
+            medicineContainer.appendChild(newMedicineSection);
+        });
+
+        // Remove a medicine section
+        function removeMedicine(button) {
+            button.parentElement.remove();
+        }
+
+        // Handle form submission
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Simulate form submission
+            console.log('Pharmacy Name:', form.pharmacyName.value);
+            console.log('Location:', form.location.value);
+            const medicines = Array.from(document.getElementsByName('medicineName[]')).map((input, index) => ({
+                name: input.value,
+                quantity: document.getElementsByName('quantity[]')[index].value,
+            }));
+            console.log('Medicines:', medicines);
+
+            // Display success message
+            successMessage.style.display = 'block';
+
+            // Clear the form
+            form.reset();
+            medicineContainer.innerHTML = ''; // Remove all medicine sections except the initial one
+
+            // Hide success message after 3 seconds
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

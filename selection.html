@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Availability</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            height: 100vh; /* Full viewport height */
+            background-color: rgba(0, 0, 0, 0.8); /* Dark background for the entire page */
+        }
+
+        /* Video background */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            object-fit: cover;
+        }
+
+        /* Overlay for readability */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+            color: #fff; /* White text */
+            text-align: center; /* Center text */
+            max-width: 500px; /* Limit content width */
+            background-color: rgba(36, 224, 199, 0.822); /* Slightly transparent background for content */
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Shadow effect */
+        }
+
+        label {
+            margin-bottom: 15px;
+            display: block;
+            font-size: 1.2em; /* Larger text */
+        }
+
+        select {
+            margin-bottom: 15px;
+            display: block;
+            font-size: 1.2em; /* Larger text */
+            margin-left: 2cm; /* Position 2 cm to the right */
+        }
+
+        button {
+            background-color: white; /* White background */
+            color: #000000; /* Blue text */
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 1.2em; /* Larger text */
+            transition: transform 0.3s ease, background-color 0.3s ease; /* Animation effect */
+            margin: 20px auto; /* Center button */
+            display: block; /* Make button a block element to center it */
+            width: 200px; /* Fixed width for the button */
+        }
+
+        button:hover {
+            transform: translateY(-3px); /* Lift effect on hover */
+            background-color: rgba(201, 212, 213, 0.926); /* Light blue effect on hover */
+        }
+
+        button:active {
+            background-color: lightgreen; /* Light green effect on mouse pointer animation */
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            font-size: 1.2em; /* Larger text for hospital list */
+            background-color: rgb(0, 0, 0); /* Black background for the list */
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        li {
+            margin: 5px 0;
+            color: white; /* White text for list items */
+            padding: 10px;
+            border-radius: 5px;
+            transition: transform 0.3s; /* Animation for list items */
+        }
+
+        li:hover {
+            transform: scale(1.05); /* Scale effect on hover */
+            background-color: rgba(255, 255, 255, 0.2); /* Light effect on hover */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Video Background -->
+    <video autoplay muted loop class="video-background">
+        <source src="bg4.mp4" type="video/mp4"> <!-- Replace with your video file -->
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="overlay"></div> <!-- Overlay for readability -->
+
+    <div class="content">
+        <h1>Check Test Availability</h1>
+        
+        <label for="test">Select Test:</label>
+        <select id="test" name="test">
+            <option value="" disabled selected>Select a test</option>
+            <option value="X-ray">X-ray</option>
+            <option value="Physiotherapy">Physiotherapy</option>
+            <option value="Blood Test">Blood Test</option>
+            <option value="MRI">MRI</option>
+            <option value="CT Scan">CT Scan</option>
+            <option value="Ultrasound">Ultrasound</option>
+            <option value="Electrocardiogram">Electrocardiogram</option>
+            <option value="Blood Pressure Monitoring">Blood Pressure Monitoring</option>
+            <option value="Endoscopy">Endoscopy</option>
+            <option value="Allergy Test">Allergy Test</option>
+            <option value="X-ray for Dental">X-ray for Dental</option>
+            <option value="Liver Function Test">Liver Function Test</option>
+            <option value="Kidney Function Test">Kidney Function Test</option>
+            <option value="Thyroid Function Test">Thyroid Function Test</option>
+            <option value="Bone Density Test">Bone Density Test</option>
+            <option value="Pulmonary Function Test">Pulmonary Function Test</option>
+            <option value="Genetic Testing">Genetic Testing</option>
+            <option value="Fertility Testing">Fertility Testing</option>
+            <option value="HIV Testing">HIV Testing</option>
+            <option value="Cancer Screening">Cancer Screening</option>
+        </select>
+
+        <button onclick="findHospitals()">Check Availability</button>
+
+        <h2>Top Hospitals:</h2>
+        <ul id="hospital-list"></ul>
+    </div>
+
+    <script>
+        const hospitalData = {
+            "X-ray": [
+                { name: "Apollo Hospital", rate: 1500 },
+                { name: "KMCH", rate: 1200 },
+                { name: "AIIMS", rate: 1000 },
+                { name: "Narayana Health", rate: 1300 },
+                { name: "City Hospital", rate: 1100 }
+            ],
+            "Physiotherapy": [
+                { name: "Apollo Hospital", rate: 2000 },
+                { name: "Narayana Health", rate: 1800 },
+                { name: "Fortis Healthcare", rate: 1700 },
+                { name: "Manipal Hospitals", rate: 1600 },
+                { name: "Medanta", rate: 1500 }
+            ],
+            "Blood Test": [
+                { name: "AIIMS", rate: 800 },
+                { name: "Fortis Healthcare", rate: 600 },
+                { name: "Narayana Health", rate: 700 },
+                { name: "Max Healthcare", rate: 750 },
+                { name: "Apollo Hospital", rate: 900 }
+            ],
+            "MRI": [
+                { name: "AIIMS", rate: 3000 },
+                { name: "Apollo Hospital", rate: 2500 },
+                { name: "City Hospital", rate: 2700 },
+                { name: "Narayana Health", rate: 2900 },
+                { name: "Medanta", rate: 2600 }
+            ],
+            "CT Scan": [
+                { name: "City Hospital", rate: 3500 },
+                { name: "Apollo Hospital", rate: 3300 },
+                { name: "City Hospital", rate: 3400 },
+                { name: "Fortis Healthcare", rate: 3600 },
+                { name: "AIIMS", rate: 3700 }
+            ],
+            "Ultrasound": [
+                { name: "AIIMS", rate: 1200 },
+                { name: "Narayana Health", rate: 1000 },
+                { name: "Apollo Hospital", rate: 1100 },
+                { name: "City Hospital", rate: 1050 },
+                { name: "Manipal Hospitals", rate: 950 }
+            ],
+            "Electrocardiogram": [
+                { name: "Apollo Hospital", rate: 500 },
+                { name: "AIIMS", rate: 400 },
+                { name: "City Hospital", rate: 450 },
+                { name: "Narayana Health", rate: 480 },
+                { name: "Medanta", rate: 520 }
+            ],
+            "Blood Pressure Monitoring": [
+                { name: "Fortis Healthcare", rate: 300 },
+                { name: "Apollo Hospital", rate: 250 },
+                { name: "City Hospital", rate: 280 },
+                { name: "Narayana Health", rate: 270 },
+                { name: "AIIMS", rate: 290 }
+            ],
+            "Endoscopy": [
+                { name: "Narayana Health", rate: 2500 },
+                { name: "Apollo Hospital", rate: 2300 },
+                { name: "Fortis Healthcare", rate: 2400 },
+                { name: "City Hospital", rate: 2200 },
+                { name: "Medanta", rate: 2100 }
+            ],
+            "Allergy Test": [
+                { name: "Apollo Hospital", rate: 600 },
+                { name: "Fortis Healthcare", rate: 500 },
+                { name: "Narayana Health", rate: 550 },
+                { name: "AIIMS", rate: 580 },
+                { name: "Max Healthcare", rate: 590 }
+            ],
+            "X-ray for Dental": [
+                { name: "Narayana Health", rate: 700 },
+                { name: "Apollo Hospital", rate: 600 },
+                { name: "Fortis Healthcare", rate: 650 },
+                { name: "AIIMS", rate: 680 },
+                { name: "Max Healthcare", rate: 690 }
+            ],
+            "Liver Function Test": [
+                { name: "Fortis Healthcare", rate: 900 },
+                { name: "Apollo Hospital", rate: 800 },
+                { name: "AIIMS", rate: 700 },
+                { name: "Narayana Health", rate: 750 },
+                { name: "Max Healthcare", rate: 760 }
+            ],
+            "Kidney Function Test": [
+                { name: "Apollo Hospital", rate: 1000 },
+                { name: "Fortis Healthcare", rate: 900 },
+                { name: "AIIMS", rate: 850 },
+                { name: "Narayana Health", rate: 880 },
+                { name: "Max Healthcare", rate: 870 }
+            ],
+            "Thyroid Function Test": [
+                { name: "Narayana Health", rate: 1100 },
+                { name: "Apollo Hospital", rate: 1000 },
+                { name: "Fortis Healthcare", rate: 1200 },
+                { name: "AIIMS", rate: 950 },
+                { name: "Max Healthcare", rate: 980 }
+            ],
+            "Bone Density Test": [
+                { name: "AIIMS", rate: 800 },
+                { name: "Apollo Hospital", rate: 700 },
+                { name: "Fortis Healthcare", rate: 600 },
+                { name: "Narayana Health", rate: 750 },
+                { name: "Max Healthcare", rate: 780 }
+            ],
+            "Pulmonary Function Test": [
+                { name: "Narayana Health", rate: 1200 },
+                { name: "Apollo Hospital", rate: 1300 },
+                { name: "Fortis Healthcare", rate: 1400 },
+                { name: "AIIMS", rate: 1100 },
+                { name: "Max Healthcare", rate: 1150 }
+            ],
+            "Genetic Testing": [
+                { name: "Fortis Healthcare", rate: 3000 },
+                { name: "Apollo Hospital", rate: 2800 },
+                { name: "AIIMS", rate: 2500 },
+                { name: "Narayana Health", rate: 2600 },
+                { name: "Max Healthcare", rate: 2700 }
+            ],
+            "Fertility Testing": [
+                { name: "Apollo Hospital", rate: 4000 },
+                { name: "Fortis Healthcare", rate: 3900 },
+                { name: "AIIMS", rate: 3800 },
+                { name: "Narayana Health", rate: 3700 },
+                { name: "Max Healthcare", rate: 3600 }
+            ],
+            "HIV Testing": [
+                { name: "Narayana Health", rate: 1000 },
+                { name: "Apollo Hospital", rate: 800 },
+                { name: "Fortis Healthcare", rate: 900 },
+                { name: "AIIMS", rate: 850 },
+                { name: "Max Healthcare", rate: 870 }
+            ],
+            "Cancer Screening": [
+                { name: "Apollo Hospital", rate: 5000 },
+                { name: "Narayana Health", rate: 4800 },
+                { name: "Fortis Healthcare", rate: 4900 },
+                { name: "AIIMS", rate: 4600 },
+                { name: "Max Healthcare", rate: 4700 }
+            ],
+        };
+
+        function findHospitals() {
+            const selectedTest = document.getElementById("test").value;
+            const hospitalList = document.getElementById("hospital-list");
+
+            hospitalList.innerHTML = ''; // Clear the list before displaying new data
+
+            if (selectedTest && hospitalData[selectedTest]) {
+                const hospitals = hospitalData[selectedTest];
+
+                // Sort hospitals by price (highest to lowest)
+                hospitals.sort((a, b) => b.rate - a.rate);
+
+                hospitals.forEach(hospital => {
+                    const li = document.createElement("li");
+                    li.textContent = `${hospital.name}: ₹${hospital.rate}`;
+                    hospitalList.appendChild(li);
+                });
+            } else {
+                hospitalList.innerHTML = '<li>Please select a test to see the available hospitals.</li>';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPay Payment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #00ffdd;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center align the content */
+            justify-content: center; /* Center vertically */
+            height: 100vh; /* Full viewport height */
+        }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%; /* Responsive width */
+            max-width: 400px; /* Max width for larger screens */
+        }
+        img {
+            width: 100%; /* Make QR code responsive */
+            height: auto; /* Maintain aspect ratio */
+            margin-bottom: 20px; /* Space below the image */
+        }
+        .amount {
+            font-size: 1.5em; /* Larger font size for emphasis */
+            color: #000000; /* Color for the amount text */
+            margin-bottom: 10px; /* Space below the amount text */
+        }
+        .note {
+            font-size: 0.9em;
+            color: red; /* Set note text color to red */
+            font-weight: bold; /* Make note bold */
+            margin-top: 20px; /* Space above the note */
+            text-align: left; /* Align text to the left */
+        }
+        .note ul {
+            list-style-type: circle; /* Use circle bullets */
+            padding-left: 20px; /* Indent the list */
+        }
+        .note-content {
+            background-color: #ffcccc; /* Background color for the note section */
+            
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px; /* Space above the note content */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Pay with GPAY</h2>
+    <img src="images/gimg.jpeg" alt="GPay QR Code"> <!-- Replace with your QR code image path -->
+    <div class="amount">₹500</div>
+   
+    <div class="note">
+        <h2>NOTE:</h2>
+        <div class="note-content">
+            <p>• IT CAN BE APPLICABLE ONLY IF THE AMOUNT IS ₹500.</p>
+            <p>• BELOW OR ABOVE ₹500 IS NOT APPLICABLE.</p>
+            <p>• AFTER THE CONSULTATION, THE BALANCE AMOUNT WILL BE PROVIDED BY CERTAIN HOSPITALS.</p>
+        </div>
+    </div>
+    
+</div>
+
+</body>
+</html>

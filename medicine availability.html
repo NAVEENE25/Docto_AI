@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicine Availability</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Prevent scrolling due to the video */
+        }
+
+        /* Background video styles */
+        .background-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1; /* Behind other content */
+        }
+
+        header {
+            background-color: rgba(17, 234, 227, 0.9); /* Add transparency */
+            padding: 20px;
+            text-align: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .container {
+            margin: 20px auto;
+            width: 80%;
+            z-index: 1; /* Ensure content is above video */
+            position: relative; /* For z-index to work */
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .medicine-select {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        select {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 300px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-left: 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        /* Pop-up Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            width: 400px;
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-200px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close-btn {
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .close-btn:hover {
+            color: red;
+        }
+
+        .medicine-section {
+            background-color: #e0f7fa; /* Light cyan background */
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .location-list {
+            text-align: left;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        .location-list li {
+            list-style: none;
+            padding: 5px 0;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #777;
+        }
+
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 90%;
+            }
+
+            select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Background Video -->
+<video autoplay muted loop class="background-video">
+    <source src="images/bg8.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+
+<header>Docto AI - Medicine Availability</header>
+
+<div class="container">
+    <h2>Select a Medicine</h2>
+
+    <div class="medicine-select">
+        <select id="medicine">
+            <option value="">Select a Medicine</option>
+            <option value="Cancer Medicine">Cancer Medicine</option>
+            <option value="Diabetes Medicine">Diabetes Medicine</option>
+            <option value="Heart Medicine">Heart Medicine</option>
+            <option value="Pain Reliever">Pain Reliever</option>
+            <option value="Blood Pressure Medicine">Blood Pressure Medicine</option>
+            <option value="Asthma Inhaler">Asthma Inhaler</option>
+            <option value="Allergy Pills">Allergy Pills</option>
+            <option value="Cholesterol Medicine">Cholesterol Medicine</option>
+            <option value="Thyroid Medicine">Thyroid Medicine</option>
+            <option value="Antibiotics">Antibiotics</option>
+            <option value="Vitamins">Vitamins</option>
+            <option value="Iron Supplements">Iron Supplements</option>
+            <option value="Calcium Supplements">Calcium Supplements</option>
+            <option value="Cough Syrup">Cough Syrup</option>
+            <option value="Migraine Medicine">Migraine Medicine</option>
+            <option value="Anti-Depressants">Anti-Depressants</option>
+            <option value="Anti-Anxiety Medicine">Anti-Anxiety Medicine</option>
+            <option value="Insulin">Insulin</option>
+            <option value="Acid Reflux Medicine">Acid Reflux Medicine</option>
+            <option value="Anti-Malaria Tablets">Anti-Malaria Tablets</option>
+            <option value="Anti-Viral Medicine">Anti-Viral Medicine</option>
+            <option value="Antiseptic Cream">Antiseptic Cream</option>
+            <option value="Steroids">Steroids</option>
+            <option value="Pain Killers">Pain Killers</option>
+            <option value="Antifungal Cream">Antifungal Cream</option>
+            <option value="Diarrhea Relief Medicine">Diarrhea Relief Medicine</option>
+            <option value="Constipation Relief">Constipation Relief</option>
+            <option value="Eye Drops">Eye Drops</option>
+            <option value="Ear Drops">Ear Drops</option>
+            <!-- Continue adding more medicines up to 50+ -->
+        </select>
+        <button onclick="showPopup()">Check Availability</button>
+    </div>
+</div>
+
+<!-- Pop-up Modal -->
+<div id="availabilityModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closePopup()">&times;</span>
+        <div class="medicine-section">
+            <h3 id="medicineName"></h3>
+        </div>
+        <p>Available at the following locations:</p>
+        <ul id="locationList" class="location-list">
+            <!-- Locations will be inserted here -->
+        </ul>
+    </div>
+</div>
+
+<footer>&copy; DOCTO AI</footer>
+
+<script>
+    // Medicine availability data with 50+ medicines and locations
+    const medicineLocations = {
+        "Cancer Medicine": ["Ram Nagar, near Apollo Hospital", "City Hospital", "Jai Medical"],
+        "Diabetes Medicine": ["MG Road, near Metro Clinic", "Health Plus Pharmacy", "LifeCare Medicals"],
+        "Heart Medicine": ["Lakshmi Nagar, near Heart Care Hospital", "Green Cross Pharmacy", "City Clinic"],
+        "Pain Reliever": ["Raj Nagar, near Sunshine Hospital", "CareWell Medical", "Max Health"],
+        "Blood Pressure Medicine": ["Nehru Street, near Lifeline Clinic", "HealthFirst Medical", "Care Pharmacy"],
+        "Asthma Inhaler": ["Park Road, near Specialty Clinic", "WellCare Pharmacy", "HealthHub Medical"],
+        "Allergy Pills": ["East Street, near Sun Medical", "City Care Pharmacy", "Apollo Medicals"],
+        "Cholesterol Medicine": ["Gandhi Nagar, near Metro Care", "Ramanuja Nagar, City Clinic", "Green Valley Pharmacy"],
+        "Thyroid Medicine": ["West Avenue, near Apollo Clinic", "Life Pharmacy", "Jai Medical"],
+        "Antibiotics": ["Central Park, near Prime Health", "Care Pharmacy", "SuperPharm Medicals"],
+        "Vitamins": ["South Street, near HealthyLife", "MedPlus", "Apollo Pharmacy"],
+        "Iron Supplements": ["Gokul Nagar, near Lotus Clinic", "MaxCare Pharmacy", "Apollo Medicals"],
+        "Calcium Supplements": ["City Road, near HealthWorld", "QuickMed Pharmacy", "Prime Medicals"],
+        "Cough Syrup": ["Market Street, near Apollo Hospital", "Star Medicals", "SuperCare Pharmacy"],
+        "Migraine Medicine": ["Pine Road, near HealthPlus", "MedicalLife", "QuickMed Pharmacy"],
+        "Anti-Depressants": ["Elm Street, near Wellness Clinic", "LifeCare Pharmacy", "PrimePharm"],
+        "Anti-Anxiety Medicine": ["West Circle, near HeartCare", "City Medicals", "Care Plus Pharmacy"],
+        "Insulin": ["Ashok Nagar, near Apollo Clinic", "HealthFirst Medical", "Wellness Pharmacy"],
+        "Acid Reflux Medicine": ["Meera Nagar, near Sunshine Clinic", "Max Medical", "MedPlus Pharmacy"],
+        "Anti-Malaria Tablets": ["Park Avenue, near Lifeline Hospital", "CityCare Pharmacy", "Care Pharmacy"],
+        "Anti-Viral Medicine": ["Metro Area, near Health Hub", "Prime Medicals", "Apollo Pharmacy"],
+        "Antiseptic Cream": ["New Colony, near Health Clinic", "CareWell Pharmacy", "Max Health"],
+        "Steroids": ["Sunset Road, near HealthPlus", "QuickMed", "City Clinic"],
+        "Pain Killers": ["Flower Road, near Metro Clinic", "HealthHub", "MedLife Pharmacy"],
+        "Antifungal Cream": ["Avenue Road, near City Medicals", "Care Pharmacy", "Apollo Health"],
+        "Diarrhea Relief Medicine": ["North Lane, near Lifecare", "Max Health", "City Pharmacy"],
+        "Constipation Relief": ["West Street, near QuickMed", "HealthFirst Medical", "City Pharmacy"],
+        "Eye Drops": ["Sagar Avenue, near Wellness Clinic", "Green Cross", "LifeCare Pharmacy"],
+        "Ear Drops": ["East Lane, near Apollo Hospital", "CarePlus Medical", "Wellness Pharmacy"],
+        // Add more medicines and their locations up to 50+ as needed
+    };
+
+    function showPopup() {
+        const medicine = document.getElementById("medicine").value;
+        const medicineNameElement = document.getElementById("medicineName");
+        const locationListElement = document.getElementById("locationList");
+
+        medicineNameElement.textContent = medicine;
+
+        // Clear previous location list
+        locationListElement.innerHTML = '';
+
+        if (medicine) {
+            const locations = medicineLocations[medicine] || [];
+            locations.forEach(location => {
+                const li = document.createElement('li');
+                li.textContent = location;
+                locationListElement.appendChild(li);
+            });
+            document.getElementById("availabilityModal").style.display = "flex";
+        } else {
+            alert("Please select a medicine.");
+        }
+    }
+
+    function closePopup() {
+        document.getElementById("availabilityModal").style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById("availabilityModal");
+        if (event.target === modal) {
+            closePopup();
+        }
+    }
+</script>
+
+</body>
+</html>

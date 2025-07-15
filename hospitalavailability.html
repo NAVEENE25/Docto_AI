@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Test Availability Update</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* General styling */
+        body, html {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: url('images/hospital.png'); /* Replace 'path_to_your_image.jpg' with your image's path */
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+        }
+
+        /* Form container */
+      .form-container {
+    background-color: rgba(255, 255, 255, 0.7); /* Adjust the 0.7 for more or less transparency */
+    padding: 40px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 700px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+
+        /* Header styling */
+        h1 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* Input group styling */
+        .input-group {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .input-group label {
+            width: 130px;
+            font-weight: bold;
+            color: #333;
+            text-align: left;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: calc(100% - 150px);
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            background-color: white; /* White background for input fields */
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            border-color: #007BFF;
+        }
+
+        /* Button styling */
+        .add-more-btn, .submit-btn {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .add-more-btn:hover, .submit-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Success Message */
+        .success-message {
+            background-color: #28a745;
+            color: white;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+            display: none;
+            font-size: 18px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Hospital Test Availability Update</h1>
+        <form id="hospital-update-form">
+            <!-- Hospital Name -->
+            <div class="input-group">
+                <label for="hospital-name">Hospital Name:</label>
+                <input type="text" id="hospital-name" name="hospital-name" placeholder="Enter hospital name" required>
+            </div>
+
+            <!-- Hospital Location -->
+            <div class="input-group">
+                <label for="hospital-location">Hospital Location:</label>
+                <input type="text" id="hospital-location" name="hospital-location" placeholder="Enter hospital location" required>
+            </div>
+
+            <!-- Tests Available -->
+            <div class="input-group">
+                <label for="tests">Tests Available:</label>
+                <input type="text" id="tests" name="tests[]" placeholder="Enter test name">
+            </div>
+            <button type="button" class="add-more-btn" onclick="addInputField('tests')">Add More Tests</button>
+
+            <!-- Medicines Available -->
+            <div class="input-group">
+                <label for="medicines">Medicines Available:</label>
+                <input type="text" id="medicines" name="medicines[]" placeholder="Enter medicine name">
+            </div>
+            <button type="button" class="add-more-btn" onclick="addInputField('medicines')">Add More Medicines</button>
+
+            <!-- Doctors Available -->
+            <div class="input-group">
+                <label for="doctors">Doctors Available:</label>
+                <input type="text" id="doctors" name="doctors[]" placeholder="Enter doctor name or specialty">
+            </div>
+            <button type="button" class="add-more-btn" onclick="addInputField('doctors')">Add More Doctors</button>
+
+            <!-- Submit Button -->
+            <button type="submit" class="submit-btn">Update Availability</button>
+        </form>
+
+        <!-- Success Message -->
+        <div id="success-message" class="success-message">Data Updated Successfully!</div>
+    </div>
+
+    <script>
+        // Function to add input fields dynamically for tests, medicines, or doctors
+        function addInputField(type) {
+            const inputGroup = document.createElement('div');
+            inputGroup.classList.add('input-group');
+            const inputField = document.createElement('input');
+            inputField.type = 'text';
+            inputField.name = `${type}[]`;
+            inputField.placeholder = `Enter ${type.slice(0, -1)} name`; // Remove trailing "s" for singular form
+            inputGroup.appendChild(inputField);
+            const form = document.getElementById('hospital-update-form');
+            form.insertBefore(inputGroup, form.lastElementChild);
+        }
+
+        // Handle form submission
+        document.getElementById('hospital-update-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const hospitalName = document.getElementById('hospital-name').value;
+            const hospitalLocation = document.getElementById('hospital-location').value;
+            const tests = Array.from(document.getElementsByName('tests[]')).map(input => input.value);
+            const medicines = Array.from(document.getElementsByName('medicines[]')).map(input => input.value);
+            const doctors = Array.from(document.getElementsByName('doctors[]')).map(input => input.value);
+
+            const data = {
+                hospitalName,
+                hospitalLocation,
+                tests,
+                medicines,
+                doctors
+            };
+
+            // Log data to console
+            console.log(data);
+
+            // Show success message
+            document.getElementById('success-message').style.display = 'block';
+
+            // Hide success message after 3 seconds
+            setTimeout(() => {
+                document.getElementById('success-message').style.display = 'none';
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

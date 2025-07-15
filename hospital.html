@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Doctor Appointment Booking</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0056b3, #00bfff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+        }
+
+        .container h2 {
+            color: #0056b3;
+            margin-bottom: 20px;
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        label {
+            display: block;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+
+        select, input[type="text"], input[type="date"], input[type="time"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            background-color: #f9f9f9;
+        }
+
+        select:focus, input[type="text"]:focus, input[type="date"]:focus, input[type="time"]:focus {
+            border-color: #0056b3;
+            outline: none;
+        }
+
+        input[type="text"] {
+            display: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            background: linear-gradient(135deg, #0056b3, #00bfff);
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #004494, #0098cc);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Book an Appointment</h2>
+        
+        <!-- Date Selection -->
+        <label for="consulting-date">Select Date:</label>
+        <input type="date" id="consulting-date" required>
+
+        <!-- Hospital Selection -->
+        <label for="hospital-select">Select Hospital:</label>
+        <select id="hospital-select" onchange="populateDoctors()">
+            <option value="">Choose a hospital</option>
+            <option value="Hospital A">Hospital A</option>
+            <option value="Hospital B">Hospital B</option>
+            <option value="Hospital C">Hospital C</option>
+            <option value="Hospital D">Hospital D</option>
+            <option value="Hospital E">Hospital E</option>
+            <option value="Hospital F">Hospital F</option>
+            <option value="Hospital G">Hospital G</option>
+            <option value="Hospital H">Hospital H</option>
+            <option value="Hospital I">Hospital I</option>
+            <option value="Hospital J">Hospital J</option>
+        </select>
+
+        <!-- Doctor Type Selection -->
+        <label for="doctor-type-select">Select Doctor:</label>
+        <select id="doctor-type-select">
+            <option value="">Choose doctor</option>
+        </select>
+
+        <!-- Time Selection -->
+        <label for="consulting-time">Select Time:</label>
+        <input type="time" id="consulting-time" required>
+
+        <button onclick="checkDoctorAvailability()">Check Availability</button>
+    </div>
+
+    <script>
+        // Sample doctor data by hospital and doctor availability timings
+        const hospitalData = {
+            "Hospital A": {
+                "General": ["09:00", "12:00", "15:00"],
+                "Dentist": ["10:00", "13:00"],
+                "Cardiologist": ["08:30", "14:00"]
+            },
+            "Hospital B": {
+                "Orthopedic": ["10:30", "14:00", "16:00"],
+                "Dermatologist": ["11:00", "13:30"],
+                "ENT": ["12:00", "15:30"]
+            },
+            "Hospital C": {
+                "Eye Specialist": ["09:00", "12:30", "16:00"],
+                "Pediatrician": ["11:00", "14:00"],
+                "Psychiatrist": ["10:30", "15:00"]
+            }
+            // Continue similarly for Hospitals D to J
+        };
+
+        // Populate doctors based on selected hospital
+        function populateDoctors() {
+            const hospitalSelect = document.getElementById("hospital-select").value;
+            const doctorTypeSelect = document.getElementById("doctor-type-select");
+
+            // Clear previous options
+            doctorTypeSelect.innerHTML = "<option value=''>Choose doctor</option>";
+
+            if (hospitalData[hospitalSelect]) {
+                Object.keys(hospitalData[hospitalSelect]).forEach(doctor => {
+                    const option = document.createElement("option");
+                    option.value = doctor;
+                    option.textContent = doctor;
+                    doctorTypeSelect.appendChild(option);
+                });
+            }
+        }
+
+        function checkDoctorAvailability() {
+            const hospital = document.getElementById("hospital-select").value;
+            const doctor = document.getElementById("doctor-type-select").value;
+            const time = document.getElementById("consulting-time").value;
+
+            if (!hospital || !doctor || !time) {
+                alert("Please fill out all fields.");
+                return;
+            }
+
+            const availableTimes = hospitalData[hospital][doctor];
+            const userTime = time;
+
+            // Check for exact match or find closest times
+            if (availableTimes.includes(userTime)) {
+                alert(`Doctor is available at ${userTime}.`);
+            } else {
+                const closestBefore = availableTimes.filter(t => t < userTime).pop();
+                const closestAfter = availableTimes.find(t => t > userTime);
+                let message = "Doctor is not available at this exact time.\n";
+                if (closestBefore) message += `Closest before: ${closestBefore}\n`;
+                if (closestAfter) message += `Closest after: ${closestAfter}`;
+                alert(message);
+            }
+        }
+    </script>
+</body>
+</html>
